@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JobFit 简历匹配分析器</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- 头部 -->
+    <div class="header">
+      <div class="logo">
+        <span class="logo-icon">🔍</span>
+        <span class="logo-text">JobFit</span>
+      </div>
+      <p class="subtitle">简历与JD智能匹配分析器</p>
+    </div>
+
+    <!-- LLM选择区域 -->
+    <div class="llm-section" id="llmSection">
+      <p class="section-title">选择AI模型</p>
+      <div class="llm-options">
+        <label class="llm-option">
+          <input type="radio" name="llm" value="kimi" checked>
+          <div class="llm-card">
+            <span class="llm-icon">🌙</span>
+            <div class="llm-info">
+              <span class="llm-name">Kimi</span>
+              <span class="llm-desc">Moonshot AI</span>
+            </div>
+          </div>
+        </label>
+        <label class="llm-option">
+          <input type="radio" name="llm" value="deepseek">
+          <div class="llm-card">
+            <span class="llm-icon">🔮</span>
+            <div class="llm-info">
+              <span class="llm-name">DeepSeek</span>
+              <span class="llm-desc">深度求索</span>
+            </div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- 上传区域 -->
+    <div class="upload-section" id="uploadSection">
+      <div class="upload-area" id="uploadArea">
+        <div class="upload-icon">📄</div>
+        <p class="upload-title">上传简历文件</p>
+        <p class="upload-hint">支持 PDF、DOC、DOCX 格式</p>
+        <button class="upload-btn" id="uploadBtn">选择文件</button>
+        <input type="file" id="fileInput" accept=".pdf,.doc,.docx" hidden>
+      </div>
+
+      <!-- 已选择文件 -->
+      <div class="file-selected" id="fileSelected" style="display: none;">
+        <div class="file-info">
+          <span class="file-icon">📄</span>
+          <span class="file-name" id="fileName"></span>
+        </div>
+        <button class="delete-btn" id="deleteBtn">删除</button>
+      </div>
+
+      <!-- 缓存状态提示 -->
+      <div class="cache-status" id="cacheStatus" style="display: none;">
+        <span class="cache-icon">💾</span>
+        <span class="cache-text">已缓存简历解析结果</span>
+      </div>
+    </div>
+
+    <!-- 职位信息预览 -->
+    <div class="job-preview-section" id="jobPreviewSection" style="display: none;">
+      <div class="job-card">
+        <div class="job-header">
+          <span class="job-badge">BOSS直聘</span>
+        </div>
+        <div class="job-content" id="jobContent">
+          <p class="job-placeholder">正在获取职位信息...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- URL错误提示 -->
+    <div class="error-section" id="errorSection" style="display: none;">
+      <div class="error-card">
+        <span class="error-icon">⚠️</span>
+        <p class="error-text">无法获取职位信息</p>
+        <p class="error-subtext">请打开BOSS直聘职位详情页后重试</p>
+        <p class="error-url" id="errorUrl"></p>
+      </div>
+    </div>
+
+    <!-- 分析按钮 -->
+    <div class="action-section" id="actionSection">
+      <button class="analyze-btn" id="analyzeBtn" disabled>
+        <span class="btn-icon">🔍</span>
+        <span class="btn-text">开始分析匹配度</span>
+      </button>
+    </div>
+
+    <!-- 加载状态 -->
+    <div class="loading-section" id="loadingSection" style="display: none;">
+      <div class="spinner"></div>
+      <p class="loading-text" id="loadingText">正在分析匹配度...</p>
+      <p class="loading-subtext" id="loadingSubtext">AI正在对比简历与职位要求</p>
+    </div>
+
+    <!-- 结果页面 -->
+    <div class="result-section" id="resultSection" style="display: none;">
+      <!-- 匹配度圆环 -->
+      <div class="match-score-container">
+        <div class="score-circle">
+          <svg class="score-svg" viewBox="0 0 120 120">
+            <circle class="score-bg" cx="60" cy="60" r="50"></circle>
+            <circle class="score-progress" id="scoreProgress" cx="60" cy="60" r="50"></circle>
+          </svg>
+          <div class="score-text">
+            <span class="score-number" id="scoreNumber">0%</span>
+            <span class="score-label">匹配度</span>
+          </div>
+        </div>
+        <div class="score-rating" id="scoreRating">分析中...</div>
+        <p class="score-summary" id="scoreSummary"></p>
+      </div>
+
+      <!-- 匹配的项目 -->
+      <div class="result-group">
+        <div class="group-header" id="matchedHeader">
+          <span class="group-icon">✅</span>
+          <span class="group-title">匹配的项目</span>
+          <span class="group-count" id="matchedCount">(0)</span>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="group-content" id="matchedContent"></div>
+      </div>
+
+      <!-- 不匹配的项目 -->
+      <div class="result-group">
+        <div class="group-header" id="unmatchedHeader">
+          <span class="group-icon">❌</span>
+          <span class="group-title">不匹配/缺失的项目</span>
+          <span class="group-count" id="unmatchedCount">(0)</span>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="group-content" id="unmatchedContent"></div>
+      </div>
+
+      <!-- 优化建议 -->
+      <div class="suggestions-section">
+        <div class="suggestions-header">
+          <span class="suggestions-icon">💡</span>
+          <span class="suggestions-title">优化建议</span>
+        </div>
+        <ul class="suggestions-list" id="suggestionsList"></ul>
+      </div>
+
+      <!-- 底部操作按钮 -->
+      <div class="result-actions">
+        <button class="action-btn secondary" id="copyBtn">📋 复制结果</button>
+        <button class="action-btn secondary" id="exportBtn">💾 导出报告</button>
+        <button class="action-btn primary" id="restartBtn">← 重新分析</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="pdf.min.js"></script>
+  <script src="mammoth.browser.min.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
