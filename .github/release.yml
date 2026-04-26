@@ -1,0 +1,44 @@
+# GitHub Release 配置
+# 创建Release时请复制以下内容
+
+name: JobFit v1.0.0
+
+tag: v1.0.0
+
+body: |
+  ## 🎉 JobFit 首个正式版本发布
+
+  **JobFit** - 智能简历与职位匹配分析器
+
+  ### ✨ 核心功能
+
+  - **双AI模型支持** - Kimi (Moonshot AI) & DeepSeek (深度求索)
+  - **智能简历解析** - 支持 PDF/DOC/DOCX 格式
+  - **职位信息自动获取** - 专为 BOSS直聘 优化
+  - **深度匹配分析** - 多维度分析匹配度
+  - **可视化结果展示** - 圆环进度条 + 详细分析
+
+  ### 🚀 快速开始
+
+  1. 下载并解压
+  2. 编辑 `config.js` 填入你的 API 密钥
+  3. 在 Chrome 中加载扩展程序
+  4. 访问 BOSS直聘 职位页开始使用
+
+  📖 [完整使用说明](README.md)
+
+  ### 📦 安装包
+
+  - 下载: `jobfit-v1.0.0.zip`
+  - 大小: ~3MB
+  - 兼容: Chrome 88+
+
+  ### ⚠️ 注意
+
+  使用前请先在 `config.js` 中配置 API 密钥：
+  - Kimi: https://platform.moonshot.cn/
+  - DeepSeek: https://platform.deepseek.com/
+
+  ---
+
+  **让AI帮你找到最适合的工作！** 🚀

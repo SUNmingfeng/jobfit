@@ -10,7 +10,7 @@ const CONFIG = {
       name: 'Kimi',
       icon: '🌙',
       description: 'Moonshot AI',
-      apiKey: 'sk-JHE9BPzgjxjTbe38lhBEiLXWzrUeStdRerJbqEUp7YrKrx2a',  // 请替换为Kimi API密钥
+      apiKey: '请替换为Kimi API密钥',  // 请替换为Kimi API密钥
       apiUrl: 'https://api.moonshot.cn/v1/chat/completions',
       model: 'moonshot-v1-8k',
       systemPrompt: '你是一个专业的简历分析助手，擅长提取和结构化简历信息。'
@@ -19,7 +19,7 @@ const CONFIG = {
       name: 'DeepSeek',
       icon: '🔮',
       description: '深度求索',
-      apiKey: 'sk-8ed503daf1094cad8beb5d4a70255068',  // 请替换为DeepSeek API密钥
+      apiKey: '请替换为DeepSeek API密钥',  // 请替换为DeepSeek API密钥
       apiUrl: 'https://api.deepseek.com/v1/chat/completions',
       model: 'deepseek-chat',
       systemPrompt: '你是一个专业的简历分析助手，擅长提取和结构化简历信息。'
